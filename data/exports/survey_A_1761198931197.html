@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产后恢复问卷</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .form {
+            padding: 30px;
+        }
+        
+        .question {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e1e5e9;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        
+        .question-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .option input[type="radio"],
+        .option input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+        
+        .option.selected {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .progress {
+            margin-bottom: 20px;
+            background: #e1e5e9;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+        
+        .result {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .result h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .result p {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .form {
+                padding: 20px;
+            }
+            
+            .question {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>产后恢复问卷</h1>
+            <p>请根据您的实际情况选择最符合的答案</p>
+        </div>
+        
+        <div class="form">
+            <div class="progress">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+            
+            <form id="surveyForm">
+                
+                    <div class="question" data-question="0">
+                        <div class="question-title">1. 1. 产后时间（REC）</div>
+                        <div class="options">
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q0" 
+                                           value="lt2">
+                                    <2 周
+                                </label>
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q0" 
+                                           value="w2_6">
+                                    2–6 周
+                                </label>
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q0" 
+                                           value="gt6">
+                                    > 6 周
+                                </label>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="question" data-question="1">
+                        <div class="question-title">2. 13. 饮食与蛋白（GUT/EN）</div>
+                        <div class="options">
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q1" 
+                                           value="protlow">
+                                    蛋白摄入不足
+                                </label>
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q1" 
+                                           value="irreg">
+                                    进餐不规律
+                                </label>
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q1" 
+                                           value="bal">
+                                    均衡
+                                </label>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="question" data-question="2">
+                        <div class="question-title">3. 8. 睡眠质量（EN）</div>
+                        <div class="options">
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q2" 
+                                           value="poor">
+                                    差/易醒
+                                </label>
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q2" 
+                                           value="mid">
+                                    一般
+                                </label>
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q2" 
+                                           value="good">
+                                    良好
+                                </label>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="question" data-question="3">
+                        <div class="question-title">4. 2. 阴道出血情况（REC）</div>
+                        <div class="options">
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q3" 
+                                           value="heavy">
+                                    大量出血（短时间浸透1片）
+                                </label>
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q3" 
+                                           value="decr">
+                                    规律减少
+                                </label>
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q3" 
+                                           value="stop">
+                                    点滴/已停止
+                                </label>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="question" data-question="4">
+                        <div class="question-title">5. 9. 白天体力（EN）</div>
+                        <div class="options">
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q4" 
+                                           value="bad">
+                                    很差
+                                </label>
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q4" 
+                                           value="low">
+                                    偏低
+                                </label>
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q4" 
+                                           value="good">
+                                    良好
+                                </label>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="question" data-question="5">
+                        <div class="question-title">6. 10. 乳房与哺乳（可多选，LAC）</div>
+                        <div class="options">
+                            
+                                <label class="option">
+                                    <input type="checkbox" 
+                                           name="q5" 
+                                           value="eng">
+                                    胀痛/堵奶
+                                </label>
+                            
+                                <label class="option">
+                                    <input type="checkbox" 
+                                           name="q5" 
+                                           value="mast">
+                                    局部红热伴痛
+                                </label>
+                            
+                                <label class="option">
+                                    <input type="checkbox" 
+                                           name="q5" 
+                                           value="none">
+                                    均无
+                                </label>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="question" data-question="6">
+                        <div class="question-title">7. 14. 活动/锻炼（EN）</div>
+                        <div class="options">
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q6" 
+                                           value="sed">
+                                    缺乏运动/久坐
+                                </label>
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q6" 
+                                           value="light">
+                                    轻度活动（散步/伸展）
+                                </label>
+                            
+                                <label class="option">
+                                    <input type="radio" 
+                                           name="q6" 
+                                           value="mod">
+                                    规律中等强度
+                                </label>
+                            
+                        </div>
+                    </div>
+                
+                
+                <button type="submit" class="submit-btn" id="submitBtn">提交问卷</button>
+            </form>
+        </div>
+        
+        <div class="result" id="result">
+            <h2>感谢您的参与！</h2>
+            <p>您的问卷已成功提交，我们会根据您的回答提供相应的建议。</p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('surveyForm');
+        const progressBar = document.getElementById('progressBar');
+        const submitBtn = document.getElementById('submitBtn');
+        const result = document.getElementById('result');
+        const questions = document.querySelectorAll('.question');
+        
+        // 更新进度条
+        function updateProgress() {
+            const answered = document.querySelectorAll('input:checked').length;
+            const total = document.querySelectorAll('input[type="radio"], input[type="checkbox"]').length;
+            const progress = (answered / total) * 100;
+            progressBar.style.width = progress + '%';
+            
+            submitBtn.disabled = answered === 0;
+        }
+        
+        // 监听选项变化
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('change', updateProgress);
+        });
+        
+        // 表单提交
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const answers = {};
+            
+            // 收集答案
+            questions.forEach((question, index) => {
+                const questionInputs = question.querySelectorAll('input');
+                const questionAnswers = [];
+                
+                questionInputs.forEach(input => {
+                    if (input.checked) {
+                        questionAnswers.push(input.value);
+                    }
+                });
+                
+                if (questionAnswers.length > 0) {
+                    answers[`q${index}`] = questionAnswers;
+                }
+            });
+            
+            // 显示结果
+            form.style.display = 'none';
+            result.style.display = 'block';
+            
+            // 这里可以发送数据到服务器
+            console.log('问卷答案:', answers);
+            
+            // 模拟提交成功
+            setTimeout(() => {
+                alert('问卷提交成功！感谢您的参与。');
+            }, 1000);
+        });
+        
+        // 初始化
+        updateProgress();
+    </script>
+</body>
+</html>

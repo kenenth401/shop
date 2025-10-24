@@ -1,0 +1,117 @@
+{
+  "cog": {
+    "cog_sym": {
+      "attn": 2,
+      "wm": 2,
+      "speed": 2,
+      "none": 0
+    },
+    "stress_level": {
+      "high": 1
+    },
+    "gut_sym": {
+      "often": 1
+    }
+  },
+  "sleep": {
+    "sleep_quality": {
+      "poor": 3,
+      "mid": 1,
+      "good": 0
+    },
+    "caffeine": {
+      "high": 2,
+      "mid": 1,
+      "low": 0
+    },
+    "alcohol": {
+      "high": 1,
+      "mid": 1,
+      "low": 0
+    },
+    "post_illness": {
+      "yes_now": 1
+    },
+    "screen_night": {
+      "often": 2,
+      "sometimes": 1,
+      "rare": 0
+    }
+  },
+  "meta": {
+    "sleep_quality": {
+      "poor": 1
+    },
+    "diet_sugar": {
+      "daily": 2,
+      "weekly": 1,
+      "rare": 0
+    },
+    "meal_regular": {
+      "irregular": 2,
+      "sometimes": 1,
+      "regular": 0
+    },
+    "alcohol": {
+      "high": 1
+    },
+    "activity": {
+      "low": 2,
+      "mid": 1,
+      "good": 0
+    },
+    "gut_sym": {
+      "often": 1
+    },
+    "post_illness": {
+      "yes_now": 2,
+      "yes_past": 1,
+      "no": 0
+    },
+    "hydrate": {
+      "low": 1,
+      "mid": 0.5,
+      "good": 0
+    }
+  },
+  "stress": {
+    "stress_level": {
+      "high": 3,
+      "mid": 1,
+      "low": 0
+    },
+    "caffeine": {
+      "high": 1
+    },
+    "activity": {
+      "low": 1
+    },
+    "post_illness": {
+      "yes_now": 1
+    }
+  },
+  "life": {
+    "diet_sugar": {
+      "daily": 1
+    },
+    "alcohol": {
+      "high": 1
+    },
+    "screen_night": {
+      "often": 1
+    },
+    "hydrate": {
+      "low": 1
+    }
+  },
+  "gut": {
+    "meal_regular": {
+      "irregular": 1
+    },
+    "gut_sym": {
+      "often": 3,
+      "sometimes": 1,
+      "rare": 0
+    }
+  }
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "tpl_1761197097241",
+    "name": "脑雾专项自测（H5）",
+    "lang_default": "zh",
+    "countQ": 12,
+    "typeId": "B"
+  },
+  {
+    "id": "tpl_1761197138422",
+    "name": "产后恢复专业评估（Pro）",
+    "lang_default": "zh",
+    "countQ": 14,
+    "typeId": "A"
+  },
+  {
+    "id": "tpl_1761285726444",
+    "name": "模板_tpl_1761285726444",
+    "typeId": "A",
+    "createdAt": "2025-10-24T06:02:06.444Z"
+  }
+]

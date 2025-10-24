@@ -1,0 +1,86 @@
+{
+  "REC": {
+    "bleed": {
+      "heavy": 4,
+      "decr": 1,
+      "stop": 0
+    },
+    "lochia": {
+      "abn": 3,
+      "gt6w": 3,
+      "ok": 0
+    },
+    "temp": {
+      "fev38": 4,
+      "lowfev": 2,
+      "nofev": 0
+    },
+    "incision": {
+      "red": 3,
+      "exu": 4,
+      "ok": 0
+    }
+  },
+  "PF": {
+    "pf": {
+      "ui": 3,
+      "pro": 3,
+      "none": 0
+    }
+  },
+  "LAC": {
+    "lacto": {
+      "eng": 2,
+      "mast": 4,
+      "none": 0
+    }
+  },
+  "MOOD": {
+    "mood": {
+      "sev": 4,
+      "mild": 2,
+      "ok": 0
+    }
+  },
+  "EN": {
+    "sleep": {
+      "poor": 2,
+      "mid": 1,
+      "good": 0
+    },
+    "energy": {
+      "bad": 2,
+      "low": 1,
+      "good": 0
+    },
+    "act": {
+      "sed": 1,
+      "light": 0.5,
+      "mod": 0
+    },
+    "diet": {
+      "protlow": 1,
+      "irreg": 0,
+      "bal": 0
+    }
+  },
+  "GUT": {
+    "bowel": {
+      "const": 2,
+      "hemo": 1,
+      "none": 0
+    },
+    "diet": {
+      "protlow": 1,
+      "irreg": 1,
+      "bal": 0
+    }
+  },
+  "PAIN": {
+    "pain": {
+      "sev": 3,
+      "mid": 2,
+      "mild": 0
+    }
+  }
+}

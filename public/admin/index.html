@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>问卷后台</title>
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">问卷后台</div>
+    <nav>
+      <button class="nav-item active" data-view="import">导入模板</button>
+      <button class="nav-item" data-view="types">查看类型</button>
+      <button class="nav-item" data-view="questions">查看题目</button>
+      <button class="nav-item" data-view="typeEdit">问卷类型编辑</button>
+      <button class="nav-item" data-view="export">问卷导出</button>
+    </nav>
+    <div class="foot">
+      <button id="pingBtn" class="ping">连接测试</button>
+      <span id="pingRes" class="badge">—</span>
+    </div>
+  </aside>
+
+  <main class="content">
+    <section id="view-import" class="view show">
+      <h1>导入模板（上传 HTML → 抽取 Q/WT/UI → 归类到“问卷类型”）</h1>
+      <div class="row">
+        <label>问卷类型：</label>
+        <select id="selTypeImport"></select>
+        <input id="tplId" type="text" placeholder="模板ID（可留空自动生成）">
+        <input id="tplName" type="text" placeholder="模板中文名称（不填则用标题）">
+      </div>
+      <div class="row">
+        <input id="htmlFile" type="file" accept=".html,.htm">
+        <button class="btn" id="uploadBtn">上传并入库</button>
+      </div>
+      <div id="importMsg" class="msg"></div>
+    </section>
+
+    <section id="view-types" class="view">
+      <h1>类型列表</h1>
+      <div class="row">
+        <label>筛选类型：</label>
+        <select id="selTypeFilter"></select>
+        <button class="btn ghost" id="refreshTypes">刷新</button>
+      </div>
+      <table class="table">
+        <thead><tr><th>中文名称</th><th>模板ID</th><th>题目数</th><th>隶属类型</th><th>操作</th></tr></thead>
+        <tbody id="typesBody"></tbody>
+      </table>
+    </section>
+
+    <section id="view-questions" class="view">
+      <h1>题库浏览</h1>
+      <div class="row">
+        <label>按类型查看：</label>
+        <select id="selTypeQ"></select>
+        <input id="searchQ" type="text" class="grow" placeholder="搜索题目/键/选项">
+        <button class="btn" id="btnLoadByType">加载</button>
+      </div>
+      <div id="qMeta" class="muted"></div>
+      <table class="table">
+        <thead><tr><th>#</th><th>key</th><th>题干</th><th>类型</th><th>选项</th><th>来源模板</th></tr></thead>
+        <tbody id="qBody"></tbody>
+      </table>
+    </section>
+
+    <section id="view-export" class="view">
+      <h1>问卷导出</h1>
+      <div class="row">
+        <label>问卷类型：</label>
+        <select id="selExportType"></select>
+        <label>题目数量：</label>
+        <input id="exportCount" type="number" placeholder="题目数量" min="1" max="50" value="10">
+        <button class="btn" id="exportBtn">导出问卷</button>
+      </div>
+      <div id="exportResult" class="msg" style="display:none;">
+        <h3>导出成功！</h3>
+        <p>问卷已生成，点击下方链接下载：</p>
+        <a id="downloadLink" href="#" target="_blank" class="btn">下载H5问卷</a>
+      </div>
+    </section>
+
+    <section id="view-typeEdit" class="view">
+      <h1>问卷类型编辑</h1>
+      <div class="row">
+        <input id="newTypeId" type="text" placeholder="类型ID（英文/数字）">
+        <input id="newTypeName" type="text" placeholder="类型中文名">
+        <button class="btn" id="addType">新增类型</button>
+      </div>
+      <table class="table">
+        <thead><tr><th>中文名</th><th>类型ID</th><th>操作</th></tr></thead>
+        <tbody id="typeEditBody"></tbody>
+      </table>
+    </section>
+  </main>
+</div>
+<script src="/admin/admin.js"></script>
+</body>
+</html>

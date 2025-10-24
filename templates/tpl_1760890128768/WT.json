@@ -1,0 +1,99 @@
+{
+  "PIH": {
+    "phototype": {
+      "IV": 0.5,
+      "V_VI": 1
+    },
+    "redness": {
+      "gt48": 1
+    },
+    "pih_risk": {
+      "yes": 3,
+      "mild": 1
+    },
+    "spf": {
+      "poor": 2,
+      "mid": 1
+    },
+    "diet": {
+      "poor": 1
+    }
+  },
+  "TH": {
+    "proc_class": {
+      "nonabl_lowmid": 0.5,
+      "ablative_high": 2,
+      "inject_micro": 1
+    },
+    "post_days": {
+      "d0_2": 2,
+      "d3_7": 1
+    },
+    "adverse": {
+      "lesion": 3,
+      "erosion": 2
+    },
+    "tolerate": {
+      "poor": 2,
+      "mid": 1
+    },
+    "sleep": {
+      "poor": 1,
+      "mid": 0.5
+    },
+    "diet": {
+      "poor": 1,
+      "mid": 0.5
+    }
+  },
+  "TB": {
+    "proc_class": {
+      "ablative_high": 1
+    },
+    "post_days": {
+      "d0_2": 2,
+      "d3_7": 1
+    },
+    "redness": {
+      "gt48": 2,
+      "24_48": 1
+    },
+    "dry_tight": {
+      "high": 2,
+      "mid": 1
+    },
+    "adverse": {
+      "lesion": 2,
+      "erosion": 2
+    },
+    "tolerate": {
+      "poor": 1
+    }
+  },
+  "EL": {
+    "laxity": {
+      "worse": 2,
+      "same": 1
+    },
+    "sleep": {
+      "poor": 1
+    }
+  },
+  "MC": {
+    "edema": {
+      "high": 2,
+      "mid": 1
+    },
+    "sleep": {
+      "poor": 1
+    },
+    "diet": {
+      "poor": 1
+    }
+  },
+  "LS": {
+    "spf": {
+      "poor": 1
+    }
+  }
+}

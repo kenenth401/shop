@@ -1,0 +1,107 @@
+{
+  "zh": {
+    "subA": "产后恢复专业评估（Pro）",
+    "prev": "上一步",
+    "next": "下一步",
+    "submit": "提交",
+    "lead": "留下联系方式以生成个性化产后评估",
+    "yourPlan": "产后恢复评估报告",
+    "overview": "总体概述",
+    "dims": "分维度分析",
+    "actions": "重点干预清单",
+    "follow": "复诊/随访时间窗",
+    "buy": "立即购买",
+    "copy": "复制推荐文案",
+    "ok": "已复制",
+    "fail": "复制失败",
+    "needQ": "请先选择本题答案",
+    "needLead": "请填写姓名与联系方式",
+    "sev": {
+      "a": "Ⅰ 良好",
+      "b": "Ⅱ 需关注",
+      "c": "Ⅲ 需干预",
+      "d": "Ⅳ 高风险"
+    },
+    "dim": {
+      "REC": "恢复",
+      "PF": "盆底",
+      "LAC": "泌乳",
+      "MOOD": "情绪",
+      "EN": "体力/睡眠",
+      "GUT": "排便/营养",
+      "PAIN": "疼痛"
+    },
+    "med": "当前存在就医红旗，建议尽快前往产科/乳腺/外科等门诊评估。（本自测不替代医疗服务）",
+    "rec": "优先处理主导问题，再进入巩固/维持期"
+  },
+  "en": {
+    "subA": "Postpartum Recovery Assessment (Pro)",
+    "prev": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "lead": "Leave your contact to generate your report",
+    "yourPlan": "Postpartum Recovery Report",
+    "overview": "Overview",
+    "dims": "Dimension Analysis",
+    "actions": "Priority Interventions",
+    "follow": "Follow-up Window",
+    "buy": "Buy Now",
+    "copy": "Copy Summary",
+    "ok": "Copied",
+    "fail": "Copy failed",
+    "needQ": "Please answer this question first",
+    "needLead": "Please fill your name & contact",
+    "sev": {
+      "a": "I Good",
+      "b": "II Watch",
+      "c": "III Intervene",
+      "d": "IV High-risk"
+    },
+    "dim": {
+      "REC": "Recovery",
+      "PF": "Pelvic floor",
+      "LAC": "Lactation",
+      "MOOD": "Mood",
+      "EN": "Energy/Sleep",
+      "GUT": "Bowel/Nutrition",
+      "PAIN": "Pain"
+    },
+    "med": "Red flags present. Please seek in-person care. This tool does not replace medical services.",
+    "rec": "Prioritize leading problems, then enter consolidation/maintenance."
+  },
+  "ja": {
+    "subA": "産後リカバリー評価（Pro）",
+    "prev": "戻る",
+    "next": "次へ",
+    "submit": "送信",
+    "lead": "連絡先を入力してレポートを生成",
+    "yourPlan": "産後リカバリーレポート",
+    "overview": "総合概要",
+    "dims": "領域分析",
+    "actions": "重点介入",
+    "follow": "再診/フォロー時期",
+    "buy": "今すぐ購入",
+    "copy": "推奨文をコピー",
+    "ok": "コピー済み",
+    "fail": "コピー失敗",
+    "needQ": "この設問に回答してください",
+    "needLead": "氏名と連絡先を入力してください",
+    "sev": {
+      "a": "Ⅰ 良好",
+      "b": "Ⅱ 注視",
+      "c": "Ⅲ 介入要",
+      "d": "Ⅳ ハイリスク"
+    },
+    "dim": {
+      "REC": "回復",
+      "PF": "骨盤底",
+      "LAC": "授乳",
+      "MOOD": "気分",
+      "EN": "体力/睡眠",
+      "GUT": "排便/栄養",
+      "PAIN": "疼痛"
+    },
+    "med": "レッドフラッグあり。速やかに受診してください。本ツールは医療行為を代替しません。",
+    "rec": "主導課題を優先し、その後維持期へ。"
+  }
+}

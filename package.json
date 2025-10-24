@@ -1,0 +1,17 @@
+{
+  "name": "survey-backend-builder",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node src/server.js",
+    "start": "node src/server.js",
+    "build:html": "node scripts/build-html.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "jsdom": "^24.0.0",
+    "nanoid": "^5.0.7",
+    "node-html-parser": "^7.0.1"
+  }
+}

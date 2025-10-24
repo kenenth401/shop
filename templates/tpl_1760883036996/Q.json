@@ -1,0 +1,324 @@
+[
+  {
+    "key": "time",
+    "title": {
+      "zh": "1. 产后时间（REC）",
+      "en": "1. Postpartum time (REC)",
+      "ja": "1. 産後期間（REC）"
+    },
+    "type": "single",
+    "opts": [
+      [
+        "lt2",
+        "<2 周"
+      ],
+      [
+        "w2_6",
+        "2–6 周"
+      ],
+      [
+        "gt6",
+        "> 6 周"
+      ]
+    ]
+  },
+  {
+    "key": "bleed",
+    "title": {
+      "zh": "2. 阴道出血情况（REC）",
+      "en": "2. Vaginal bleeding (REC)",
+      "ja": "2. 出血（REC）"
+    },
+    "type": "single",
+    "opts": [
+      [
+        "heavy",
+        "大量出血（短时间浸透1片）"
+      ],
+      [
+        "decr",
+        "规律减少"
+      ],
+      [
+        "stop",
+        "点滴/已停止"
+      ]
+    ]
+  },
+  {
+    "key": "lochia",
+    "title": {
+      "zh": "3. 恶露（REC）",
+      "en": "3. Lochia (REC)",
+      "ja": "3. 悪露（REC）"
+    },
+    "type": "single",
+    "opts": [
+      [
+        "abn",
+        "异味/色黄绿"
+      ],
+      [
+        "gt6w",
+        "持续>6周"
+      ],
+      [
+        "ok",
+        "正常"
+      ]
+    ]
+  },
+  {
+    "key": "temp",
+    "title": {
+      "zh": "4. 体温（REC）",
+      "en": "4. Temperature (REC)",
+      "ja": "4. 体温（REC）"
+    },
+    "type": "single",
+    "opts": [
+      [
+        "fev38",
+        "≥38℃"
+      ],
+      [
+        "lowfev",
+        "37.3–37.9℃"
+      ],
+      [
+        "nofev",
+        "无发热"
+      ]
+    ]
+  },
+  {
+    "key": "incision",
+    "title": {
+      "zh": "5. 切口/会阴情况（可多选，REC）",
+      "en": "5. Incision/perineum (multi, REC)",
+      "ja": "5. 切開/会陰（複数・REC）"
+    },
+    "type": "multi",
+    "opts": [
+      [
+        "red",
+        "红肿/硬结"
+      ],
+      [
+        "exu",
+        "渗液/裂开"
+      ],
+      [
+        "ok",
+        "外观良好（都无）"
+      ]
+    ]
+  },
+  {
+    "key": "pf",
+    "title": {
+      "zh": "6. 盆底症状（可多选，PF）",
+      "en": "6. Pelvic floor (multi, PF)",
+      "ja": "6. 骨盤底（複数・PF）"
+    },
+    "type": "multi",
+    "opts": [
+      [
+        "ui",
+        "咳嗽/运动漏尿"
+      ],
+      [
+        "pro",
+        "阴道或下坠感"
+      ],
+      [
+        "none",
+        "均无"
+      ]
+    ]
+  },
+  {
+    "key": "mood",
+    "title": {
+      "zh": "7. 情绪筛查·近两周（MOOD）",
+      "en": "7. Mood in last 2 weeks (MOOD)",
+      "ja": "7. 気分（直近2週・MOOD）"
+    },
+    "type": "single",
+    "opts": [
+      [
+        "sev",
+        "明显低落/焦虑/兴趣下降"
+      ],
+      [
+        "mild",
+        "偶有低落/易怒"
+      ],
+      [
+        "ok",
+        "心情稳定"
+      ]
+    ]
+  },
+  {
+    "key": "sleep",
+    "title": {
+      "zh": "8. 睡眠质量（EN）",
+      "en": "8. Sleep quality (EN)",
+      "ja": "8. 睡眠（EN）"
+    },
+    "type": "single",
+    "opts": [
+      [
+        "poor",
+        "差/易醒"
+      ],
+      [
+        "mid",
+        "一般"
+      ],
+      [
+        "good",
+        "良好"
+      ]
+    ]
+  },
+  {
+    "key": "energy",
+    "title": {
+      "zh": "9. 白天体力（EN）",
+      "en": "9. Daytime energy (EN)",
+      "ja": "9. 体力（EN）"
+    },
+    "type": "single",
+    "opts": [
+      [
+        "bad",
+        "很差"
+      ],
+      [
+        "low",
+        "偏低"
+      ],
+      [
+        "good",
+        "良好"
+      ]
+    ]
+  },
+  {
+    "key": "lacto",
+    "title": {
+      "zh": "10. 乳房与哺乳（可多选，LAC）",
+      "en": "10. Breastfeeding (multi, LAC)",
+      "ja": "10. 授乳（複数・LAC）"
+    },
+    "type": "multi",
+    "opts": [
+      [
+        "eng",
+        "胀痛/堵奶"
+      ],
+      [
+        "mast",
+        "局部红热伴痛"
+      ],
+      [
+        "none",
+        "均无"
+      ]
+    ]
+  },
+  {
+    "key": "bowel",
+    "title": {
+      "zh": "11. 排便/痔疮（可多选，GUT）",
+      "en": "11. Bowel/hemorrhoid (multi, GUT)",
+      "ja": "11. 排便/痔（複数・GUT）"
+    },
+    "type": "multi",
+    "opts": [
+      [
+        "const",
+        "便秘"
+      ],
+      [
+        "hemo",
+        "痔疮不适"
+      ],
+      [
+        "none",
+        "均无"
+      ]
+    ]
+  },
+  {
+    "key": "pain",
+    "title": {
+      "zh": "12. 疼痛评分 NRS（PAIN）",
+      "en": "12. Pain NRS (PAIN)",
+      "ja": "12. 疼痛 NRS（PAIN）"
+    },
+    "type": "single",
+    "opts": [
+      [
+        "sev",
+        "重度（7–10）"
+      ],
+      [
+        "mid",
+        "中度（4–6）"
+      ],
+      [
+        "mild",
+        "轻度（0–3）"
+      ]
+    ]
+  },
+  {
+    "key": "diet",
+    "title": {
+      "zh": "13. 饮食与蛋白（GUT/EN）",
+      "en": "13. Diet & protein (GUT/EN)",
+      "ja": "13. 食事と蛋白（GUT/EN）"
+    },
+    "type": "single",
+    "opts": [
+      [
+        "protlow",
+        "蛋白摄入不足"
+      ],
+      [
+        "irreg",
+        "进餐不规律"
+      ],
+      [
+        "bal",
+        "均衡"
+      ]
+    ]
+  },
+  {
+    "key": "act",
+    "title": {
+      "zh": "14. 活动/锻炼（EN）",
+      "en": "14. Activity/exercise (EN)",
+      "ja": "14. 活動/運動（EN）"
+    },
+    "type": "single",
+    "opts": [
+      [
+        "sed",
+        "缺乏运动/久坐"
+      ],
+      [
+        "light",
+        "轻度活动（散步/伸展）"
+      ],
+      [
+        "mod",
+        "规律中等强度"
+      ]
+    ]
+  }
+]
