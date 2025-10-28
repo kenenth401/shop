@@ -1,5 +1,5 @@
 import express from 'express';
-import { extractFromHTML } from './src/lib/htmlExtractor.js';
+import { extractFromHTML } from './lib/htmlExtractor.js';
 
 const app = express();
 app.use(express.json());

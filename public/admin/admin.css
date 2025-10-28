@@ -31,3 +31,34 @@ td.actions{white-space:nowrap}
 .idpill{display:inline-block;background:#f3f4f6;color:#374151;border-radius:999px;padding:4px 8px;font-size:12px}
 .qr-preview{min-width:120px;min-height:120px;border:1px dashed #d1d5db;border-radius:12px;padding:8px;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--muted)}
 .qr-preview-img{max-width:100%;max-height:100%;display:block}
+
+/* 模态框样式 */
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+.modal-content {
+  position: relative;
+  background-color: #fff;
+  margin: 5% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+  text-align: center;
+}
+.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #aaa;
+}
+.close:hover { color: #000; }

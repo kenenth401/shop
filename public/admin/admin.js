@@ -4,12 +4,15 @@ const $$ = s => Array.from(document.querySelectorAll(s));
 const api = p => p; // 同源
 
 $$('.nav-item').forEach(btn => {
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', async () => {
     $$('.nav-item').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const v = btn.dataset.view;
     $$('.view').forEach(sec => sec.classList.remove('show'));
     $('#view-' + v).classList.add('show');
+    
+    // 根据页面类型加载相应数据
+    if(v === 'shops') await renderShops();
   });
 });
 
@@ -21,7 +24,7 @@ $('#pingBtn')?.addEventListener('click', async () => {
   } catch { $('#pingRes').textContent='失败'; $('#pingRes').style.background='#fee2e2'; $('#pingRes').style.color='#991b1b'; }
 });
 
-async function getTypes(){ const r = await fetch(api('/api/admin/types')); return r.json(); }
+async function getTypes(){ const r = await fetch(api('/api/admin/types')); const data = await r.json(); return data.items || data; }
 async function createType(id, name){
   const r = await fetch(api('/api/admin/types'), {
     method:'POST',
@@ -51,6 +54,56 @@ async function deleteTemplate(tplId){ return fetch(api('/api/admin/templates/'+e
 async function fetchTemplates(typeId){ const url = new URL(api('/api/admin/templates'), location.origin); if(typeId) url.searchParams.set('typeId', typeId); const r = await fetch(url); return r.json(); }
 async function fetchTemplateDetail(id){ const r = await fetch(api('/api/admin/templates/' + encodeURIComponent(id) + '/detail')); return r.json(); }
 async function fetchTypeQuestions(typeId){ const r = await fetch(api('/api/admin/types/' + encodeURIComponent(typeId) + '/questions')); return r.json(); }
+
+// 店铺管理相关函数
+async function getShops(){ const r = await fetch(api('/api/admin/shops')); return r.json(); }
+async function createShop(name, description, manager, qr){
+  const r = await fetch(api('/api/admin/shops'), {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({name, description, manager, qr})
+  });
+  if(!r.ok){
+    let msg = `HTTP ${r.status}`;
+    try{
+      const j = await r.json();
+      if(j && j.error){
+        const map = {
+          shop_exists: '店铺名称已存在，请换一个名称',
+        };
+        msg += '：' + (map[j.error] || j.error);
+      }
+    }catch{}
+    throw new Error(msg);
+  }
+  return r;
+}
+async function updateShop(id, name, description, manager, qr){ 
+  return fetch(api('/api/admin/shops/'+encodeURIComponent(id)), { 
+    method:'PUT', 
+    headers:{'Content-Type':'application/json'}, 
+    body: JSON.stringify({name, description, manager, qr})
+  }); 
+}
+async function deleteShop(id){ return fetch(api('/api/admin/shops/'+encodeURIComponent(id)), { method:'DELETE' }); }
+
+// 文件上传相关函数
+async function uploadImage(file){
+  const formData = new FormData();
+  formData.append('image', file);
+  
+  const r = await fetch(api('/api/admin/upload'), {
+    method: 'POST',
+    body: formData
+  });
+  
+  if(!r.ok){
+    const error = await r.json();
+    throw new Error(error.error || '上传失败');
+  }
+  
+  return r.json();
+}
 
 function fillSelect(el, items, {value='id', label='name', withAll=false, allText='全部类型'}={}){
   el.innerHTML = '';
@@ -174,10 +227,38 @@ function renderQTable(Q){
 $('#btnLoadByType')?.addEventListener('click', loadQuestionsByType);
 $('#searchQ')?.addEventListener('input', ()=>{ if($('#selTypeQ').value){ loadQuestionsByType(); } });
 
+// 加载店铺列表到导出页面的下拉框
+async function loadShopsForExport() {
+  try {
+    const shops = await getShops();
+    const select = $('#selExportShop');
+    if (select) {
+      // 清空现有选项（保留"请选择店铺"选项）
+      select.innerHTML = '<option value="">请选择店铺</option>';
+      
+      // 添加店铺选项
+      shops.forEach(shop => {
+        const option = document.createElement('option');
+        option.value = shop.qr || '';
+        option.textContent = shop.name || shop.id;
+        select.appendChild(option);
+      });
+    }
+  } catch (e) {
+    console.error('加载店铺列表失败:', e);
+  }
+}
+
+// 在页面加载时填充店铺列表
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadShopsForExport();
+});
+
 // 问卷导出功能
 $('#exportBtn')?.addEventListener('click', async () => {
   const typeId = $('#selExportType').value;
   const count = parseInt($('#exportCount').value) || 10;
+  const shopQR = $('#selExportShop').value;
   
   if (!typeId) {
     alert('请选择问卷类型');
@@ -189,11 +270,16 @@ $('#exportBtn')?.addEventListener('click', async () => {
     return;
   }
   
+  if (!shopQR) {
+    alert('请选择店铺');
+    return;
+  }
+  
   try {
     const response = await fetch(api('/api/admin/export/survey'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ typeId, count })
+      body: JSON.stringify({ typeId, count, shopQR })
     });
     
     if (!response.ok) {
@@ -250,6 +336,163 @@ $('#addType')?.addEventListener('click', async ()=>{
     await refreshTypeDropdowns();
   }catch(e){
     alert('新增失败：' + e.message);
+  }
+});
+
+// 店铺管理相关函数
+async function renderShops(){
+  const shops = await getShops();
+  const tbody = $('#shopsBody'); 
+  if(!tbody) return; 
+  tbody.innerHTML='';
+  
+  shops.forEach(shop => {
+    const tr = document.createElement('tr');
+    const qrDisplay = shop.qr ? 
+      `<img src="${shop.qr}" alt="二维码" style="width:64px;height:64px;object-fit:cover;border-radius:8px;cursor:pointer;" onclick="showImageModal('${shop.qr}')">` : 
+      '<span class="muted">无图片</span>';
+    
+    tr.innerHTML = `
+      <td><input data-id="${shop.id}" class="inline-name" value="${shop.name}"/></td>
+      <td><input data-id="${shop.id}" class="inline-manager" value="${shop.manager}"/></td>
+      <td><input data-id="${shop.id}" class="inline-description" value="${shop.description || ''}"/></td>
+      <td class="qr">
+        ${qrDisplay}
+        <input data-id="${shop.id}" class="inline-qr-file" type="file" accept="image/*" style="display:none;">
+        <button data-id="${shop.id}" class="btn ghost" data-act="upload" style="margin-top:4px;font-size:12px;">更换图片</button>
+      </td>
+      <td>
+        <button class="btn ghost" data-act="save" data-id="${shop.id}">保存</button>
+        <button class="btn ghost" data-act="del" data-id="${shop.id}" style="margin-left:8px;color:#dc2626;">删除</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+  
+  // 保存按钮事件
+  tbody.querySelectorAll('button[data-act="save"]').forEach(b => b.addEventListener('click', async ()=>{
+    const id = b.dataset.id; 
+    const name = tbody.querySelector(`input[data-id="${id}"].inline-name`).value.trim();
+    const manager = tbody.querySelector(`input[data-id="${id}"].inline-manager`).value.trim();
+    const description = tbody.querySelector(`input[data-id="${id}"].inline-description`).value.trim();
+    
+    if(!name || !manager) return alert('店铺名称和负责人不可为空');
+    
+    // 获取当前店铺的二维码URL（保持不变）
+    const shops = await getShops();
+    const currentShop = shops.find(s => s.id === id);
+    const qr = currentShop ? currentShop.qr : '';
+    
+    const r = await updateShop(id, name, description, manager, qr);
+    if(!r.ok){ 
+      const error = await r.json();
+      alert('保存失败：' + (error.error || '未知错误'));
+      return; 
+    }
+    alert('保存成功');
+    await renderShops();
+  }));
+  
+  // 图片上传按钮事件
+  tbody.querySelectorAll('button[data-act="upload"]').forEach(b => b.addEventListener('click', async ()=>{
+    const id = b.dataset.id;
+    const fileInput = tbody.querySelector(`input[data-id="${id}"].inline-qr-file`);
+    fileInput.click();
+    
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      try {
+        const result = await uploadImage(file);
+        const qrUrl = result.data.url;
+        
+        // 更新店铺的二维码URL
+        const shops = await getShops();
+        const shopIndex = shops.findIndex(s => s.id === id);
+        if (shopIndex !== -1) {
+          shops[shopIndex].qr = qrUrl;
+          await updateShop(id, shops[shopIndex].name, shops[shopIndex].description, shops[shopIndex].manager, qrUrl);
+          alert('图片上传成功');
+          await renderShops();
+        }
+      } catch (error) {
+        alert('图片上传失败：' + error.message);
+      }
+    });
+  }));
+  
+  // 删除按钮事件
+  tbody.querySelectorAll('button[data-act="del"]').forEach(b => b.addEventListener('click', async ()=>{
+    const shopName = b.closest('tr').querySelector('input.inline-name').value;
+    if(!confirm(`确定要删除店铺"${shopName}"吗？此操作不可恢复！`)) return;
+    
+    const r = await deleteShop(b.dataset.id);
+    if(!r.ok){ 
+      const error = await r.json();
+      alert('删除失败：' + (error.error || '未知错误'));
+      return; 
+    }
+    alert('删除成功');
+    await renderShops();
+  }));
+}
+
+// 新增店铺按钮事件
+$('#addShop')?.addEventListener('click', async ()=>{
+  const name = $('#newShopName').value.trim();
+  const manager = $('#newShopManager').value.trim();
+  const description = $('#newShopDescription').value.trim();
+  const qrFile = $('#newShopQrFile').files[0];
+  
+  if(!name || !manager){ alert('请填写店铺名称和负责人'); return; }
+  
+  try{
+    let qrUrl = '';
+    if (qrFile) {
+      const result = await uploadImage(qrFile);
+      qrUrl = result.data.url;
+    }
+    
+    await createShop(name, description, manager, qrUrl);
+    $('#newShopName').value=''; 
+    $('#newShopManager').value='';
+    $('#newShopDescription').value='';
+    $('#newShopQrFile').value='';
+    $('#qrFileName').textContent='';
+    alert('新增成功');
+    await renderShops();
+  }catch(e){
+    alert('新增失败：' + e.message);
+  }
+});
+
+// 文件选择按钮事件
+$('#uploadQrBtn')?.addEventListener('click', ()=>{
+  $('#newShopQrFile').click();
+});
+
+$('#newShopQrFile')?.addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if (file) {
+    $('#qrFileName').textContent = `已选择: ${file.name}`;
+  } else {
+    $('#qrFileName').textContent = '';
+  }
+});
+
+// 图片预览模态框功能
+window.showImageModal = function(imageUrl) {
+  $('#modalImage').src = imageUrl;
+  $('#imageModal').style.display = 'block';
+};
+
+$('.close')?.addEventListener('click', ()=>{
+  $('#imageModal').style.display = 'none';
+});
+
+window.addEventListener('click', (e)=>{
+  if (e.target === $('#imageModal')) {
+    $('#imageModal').style.display = 'none';
   }
 });
 

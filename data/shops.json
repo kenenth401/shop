@@ -4,6 +4,15 @@
     "name": "shop1",
     "description": "",
     "manager": "dd",
-    "qr": ""
+    "qr": "/uploads/1761293038062_æªå±2025-09-16 13.37.48.png",
+    "updatedAt": "2025-10-24T08:03:58.067Z"
+  },
+  {
+    "id": "shop_1761293032279",
+    "name": "shop2",
+    "description": "adf",
+    "manager": "aa",
+    "qr": "/uploads/1761293032274_å°å°å¾.png",
+    "createdAt": "2025-10-24T08:03:52.279Z"
   }
 ]

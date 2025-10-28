@@ -1,0 +1,275 @@
+[
+  {
+    "key": "phototype",
+    "type": "single",
+    "title": {
+      "zh": "0. 肤色分型"
+    },
+    "opts": [
+      [
+        "I_III",
+        "I–III（偏白）"
+      ],
+      [
+        "IV",
+        "IV（小麦）"
+      ],
+      [
+        "V_VI",
+        "V–VI（深棕/黑）"
+      ]
+    ]
+  },
+  {
+    "key": "proc_class",
+    "type": "single",
+    "title": {
+      "zh": "0b. 术式类型"
+    },
+    "opts": [
+      [
+        "nonabl_lowmid",
+        "光子/非剥脱/低中能"
+      ],
+      [
+        "ablative_high",
+        "点阵/剥脱/高能"
+      ],
+      [
+        "inject_micro",
+        "注射/微针"
+      ]
+    ]
+  },
+  {
+    "key": "post_days",
+    "type": "single",
+    "title": {
+      "zh": "1. 距今(天)"
+    },
+    "opts": [
+      [
+        "d0_2",
+        "0–2天"
+      ],
+      [
+        "d3_7",
+        "3–7天"
+      ],
+      [
+        "d8plus",
+        "≥8天"
+      ]
+    ]
+  },
+  {
+    "key": "redness",
+    "type": "single",
+    "title": {
+      "zh": "2. 红斑/热感"
+    },
+    "opts": [
+      [
+        "gt48",
+        ">48h"
+      ],
+      [
+        "24_48",
+        "24–48h"
+      ],
+      [
+        "lt24",
+        "<24h"
+      ]
+    ]
+  },
+  {
+    "key": "dry_tight",
+    "type": "single",
+    "title": {
+      "zh": "3. 干燥紧绷"
+    },
+    "opts": [
+      [
+        "high",
+        "明显"
+      ],
+      [
+        "mid",
+        "轻度"
+      ],
+      [
+        "low",
+        "无"
+      ]
+    ]
+  },
+  {
+    "key": "adverse",
+    "type": "multi",
+    "title": {
+      "zh": "4. 异常征象(多选)"
+    },
+    "opts": [
+      [
+        "lesion",
+        "疱疹/渗出"
+      ],
+      [
+        "erosion",
+        "破溃/痂"
+      ],
+      [
+        "none",
+        "均无"
+      ]
+    ]
+  },
+  {
+    "key": "pih_risk",
+    "type": "single",
+    "title": {
+      "zh": "5. 色沉迹象"
+    },
+    "opts": [
+      [
+        "yes",
+        "已出现"
+      ],
+      [
+        "mild",
+        "轻微"
+      ],
+      [
+        "no",
+        "无"
+      ]
+    ]
+  },
+  {
+    "key": "laxity",
+    "type": "single",
+    "title": {
+      "zh": "6. 紧致度"
+    },
+    "opts": [
+      [
+        "worse",
+        "变差"
+      ],
+      [
+        "same",
+        "相当"
+      ],
+      [
+        "better",
+        "改善"
+      ]
+    ]
+  },
+  {
+    "key": "edema",
+    "type": "single",
+    "title": {
+      "zh": "7. 浮肿"
+    },
+    "opts": [
+      [
+        "high",
+        "明显"
+      ],
+      [
+        "mid",
+        "轻度"
+      ],
+      [
+        "low",
+        "无"
+      ]
+    ]
+  },
+  {
+    "key": "tolerate",
+    "type": "single",
+    "title": {
+      "zh": "8. 耐受度"
+    },
+    "opts": [
+      [
+        "poor",
+        "差"
+      ],
+      [
+        "mid",
+        "轻度"
+      ],
+      [
+        "good",
+        "良好"
+      ]
+    ]
+  },
+  {
+    "key": "spf",
+    "type": "single",
+    "title": {
+      "zh": "9. 防晒执行"
+    },
+    "opts": [
+      [
+        "poor",
+        "差"
+      ],
+      [
+        "mid",
+        "轻度"
+      ],
+      [
+        "good",
+        "良好"
+      ]
+    ]
+  },
+  {
+    "key": "sleep",
+    "type": "single",
+    "title": {
+      "zh": "10. 睡眠"
+    },
+    "opts": [
+      [
+        "poor",
+        "差"
+      ],
+      [
+        "mid",
+        "轻度"
+      ],
+      [
+        "good",
+        "良好"
+      ]
+    ]
+  },
+  {
+    "key": "diet",
+    "type": "single",
+    "title": {
+      "zh": "11. 饮食"
+    },
+    "opts": [
+      [
+        "poor",
+        "差"
+      ],
+      [
+        "mid",
+        "轻度"
+      ],
+      [
+        "good",
+        "良好"
+      ]
+    ]
+  }
+]

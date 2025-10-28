@@ -1,9 +1,12 @@
 
 import express from 'express';
 import path from 'path';
+import cors from 'cors';
+import multer from 'multer';
 import builder from '../routes/builder.js';  // 确保正确导入
 import { fileURLToPath } from 'url';
 import { promises as fs } from 'node:fs';
+import fsSync from 'fs';
 
 const app = express();
 
@@ -13,8 +16,47 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // 解析 JSON 请求体
 app.use(express.json());
 
+// 启用 CORS
+app.use(cors());
+
 // 提供静态文件，指向根目录的 public 文件夹
 app.use(express.static(path.join(__dirname, '..', 'public')));  // 修正路径，指向根目录的 public 文件夹
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));  // 上传文件服务
+
+// 配置multer文件上传
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = path.join(__dirname, '..', 'uploads');
+    // 确保上传目录存在
+    if (!fsSync.existsSync(uploadDir)) {
+      fsSync.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    // 生成唯一文件名：时间戳_原文件名
+    const timestamp = Date.now();
+    const originalName = file.originalname;
+    const ext = path.extname(originalName);
+    const name = path.basename(originalName, ext);
+    cb(null, `${timestamp}_${name}${ext}`);
+  }
+});
+
+const upload = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 限制文件大小为5MB
+  },
+  fileFilter: function (req, file, cb) {
+    // 只允许图片文件
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('只允许上传图片文件'), false);
+    }
+  }
+});
 
 // 模拟数据库查询
 let items = [
@@ -59,11 +101,11 @@ async function saveTypes() {
 
 // 路由配置，处理 `/admin` 请求
 app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'admin.html'));  // 返回根目录 public 文件夹中的 admin.html
+    res.sendFile(path.join(__dirname, '..', 'public', 'admin', 'index.html'));  // 返回根目录 public/admin 文件夹中的 index.html
 });
 
 // 处理新增类型的 POST 请求
-app.post('/api/admin/types', (req, res) => {
+app.post('/api/admin/types', async (req, res) => {
     const { id, name } = req.body;
 
     console.log('Received POST request for types:', req.body);  // 添加日志，查看请求体
@@ -97,6 +139,14 @@ app.post('/api/admin/types', (req, res) => {
 
     // 打印更新后的 items 数组
     console.log('Items after adding new type:', items);
+
+    // 保存到文件
+    try {
+        await saveTypes();
+        console.log('类型数据已保存到文件');
+    } catch (error) {
+        console.error('保存类型数据失败:', error);
+    }
 
     res.status(201).json({ message: '类型新增成功', data: { id, name }, allItems: items });
 });
@@ -137,8 +187,8 @@ app.get('/health', (req, res) => {
 // 获取所有类型
 app.get('/api/admin/types', async (req, res) => {
     try {
-        const types = await readJSON('types.json', []);
-        res.json(types);
+        await loadTypes(); // 确保数据是最新的
+        res.json({ items });
     } catch (error) {
         res.status(500).json({ error: '获取类型失败' });
     }
@@ -148,9 +198,197 @@ app.get('/api/admin/types', async (req, res) => {
 app.get('/api/admin/templates', async (req, res) => {
     try {
         const templates = await readJSON('templates.json', []);
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
         res.json(templates);
     } catch (error) {
         res.status(500).json({ error: '获取模板失败' });
+    }
+});
+
+// 获取模板详情
+app.get('/api/admin/templates/:id/detail', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const templates = await readJSON('templates.json', []);
+        const template = templates.find(t => t.id === id);
+        
+        if (!template) {
+            return res.status(404).json({ error: '模板不存在' });
+        }
+        
+        // 读取模板的详细数据
+        const Q = await readJSON(`templates/${id}/Q.json`, []);
+        const WT = await readJSON(`templates/${id}/WT.json`, {});
+        const UI = await readJSON(`templates/${id}/UI.json`, {});
+        const meta = await readJSON(`templates/${id}/meta.json`, {});
+        const rules = await readJSON(`templates/${id}/rules.json`, {});
+        const products = await readJSON(`templates/${id}/products.json`, []);
+        
+        res.json({
+            id,
+            name: template.name,
+            meta: {
+                ...meta,
+                name: template.name,
+                countQ: Q.length
+            },
+            Q,
+            WT,
+            UI,
+            rules,
+            products
+        });
+    } catch (error) {
+        console.error('获取模板详情失败:', error);
+        res.status(500).json({ error: '获取模板详情失败' });
+    }
+});
+
+// 店铺管理API
+// 获取所有店铺
+app.get('/api/admin/shops', async (req, res) => {
+    try {
+        const shops = await readJSON('shops.json', []);
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+        res.json(shops);
+    } catch (error) {
+        console.error('获取店铺列表失败:', error);
+        res.status(500).json({ error: '获取店铺列表失败' });
+    }
+});
+
+// 新增店铺
+app.post('/api/admin/shops', async (req, res) => {
+    try {
+        const { name, description, manager, qr } = req.body;
+        
+        if (!name || !manager) {
+            return res.status(400).json({ error: '店铺名称和负责人为必填项' });
+        }
+        
+        const shops = await readJSON('shops.json', []);
+        
+        // 检查店铺名称是否已存在
+        if (shops.some(shop => shop.name === name)) {
+            return res.status(409).json({ error: 'shop_exists', name });
+        }
+        
+        // 生成店铺ID
+        const shopId = `shop_${Date.now()}`;
+        const newShop = {
+            id: shopId,
+            name,
+            description: description || '',
+            manager,
+            qr: qr || '',
+            createdAt: new Date().toISOString()
+        };
+        
+        shops.push(newShop);
+        await writeJSON('shops.json', shops);
+        
+        res.status(201).json({
+            success: true,
+            message: '店铺新增成功',
+            data: newShop
+        });
+        
+    } catch (error) {
+        console.error('新增店铺失败:', error);
+        res.status(500).json({ error: '新增店铺失败' });
+    }
+});
+
+// 更新店铺
+app.put('/api/admin/shops/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, description, manager, qr } = req.body;
+        
+        const shops = await readJSON('shops.json', []);
+        const shopIndex = shops.findIndex(shop => shop.id === id);
+        
+        if (shopIndex === -1) {
+            return res.status(404).json({ error: '店铺不存在' });
+        }
+        
+        // 检查店铺名称是否与其他店铺重复
+        if (name && shops.some((shop, index) => shop.name === name && index !== shopIndex)) {
+            return res.status(409).json({ error: 'shop_exists', name });
+        }
+        
+        // 更新店铺信息
+        if (name) shops[shopIndex].name = name;
+        if (description !== undefined) shops[shopIndex].description = description;
+        if (manager) shops[shopIndex].manager = manager;
+        if (qr !== undefined) shops[shopIndex].qr = qr;
+        shops[shopIndex].updatedAt = new Date().toISOString();
+        
+        await writeJSON('shops.json', shops);
+        
+        res.json({
+            success: true,
+            message: '店铺更新成功',
+            data: shops[shopIndex]
+        });
+        
+    } catch (error) {
+        console.error('更新店铺失败:', error);
+        res.status(500).json({ error: '更新店铺失败' });
+    }
+});
+
+// 删除店铺
+app.delete('/api/admin/shops/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const shops = await readJSON('shops.json', []);
+        const shopIndex = shops.findIndex(shop => shop.id === id);
+        
+        if (shopIndex === -1) {
+            return res.status(404).json({ error: '店铺不存在' });
+        }
+        
+        const deletedShop = shops.splice(shopIndex, 1)[0];
+        await writeJSON('shops.json', shops);
+        
+        res.json({
+            success: true,
+            message: '店铺删除成功',
+            data: deletedShop
+        });
+        
+    } catch (error) {
+        console.error('删除店铺失败:', error);
+        res.status(500).json({ error: '删除店铺失败' });
+    }
+});
+
+// 文件上传API
+app.post('/api/admin/upload', upload.single('image'), (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: '没有上传文件' });
+        }
+        
+        const fileUrl = `/uploads/${req.file.filename}`;
+        res.json({
+            success: true,
+            message: '文件上传成功',
+            data: {
+                filename: req.file.filename,
+                originalName: req.file.originalname,
+                url: fileUrl,
+                size: req.file.size
+            }
+        });
+    } catch (error) {
+        console.error('文件上传失败:', error);
+        res.status(500).json({ error: '文件上传失败' });
     }
 });
 
@@ -237,12 +475,11 @@ app.delete('/api/admin/templates/:id', async (req, res) => {
         }
 
         // 删除模板文件
-        const templateDir = `data/templates/${id}`;
+        const templateDir = path.join(DATA_DIR, 'templates', id);
         try {
-            if (fs.existsSync(templateDir)) {
-                fs.rmSync(templateDir, { recursive: true, force: true });
-                console.log(`已删除模板目录: ${templateDir}`);
-            }
+            await fs.access(templateDir);
+            await fs.rm(templateDir, { recursive: true, force: true });
+            console.log(`已删除模板目录: ${templateDir}`);
         } catch (fsError) {
             console.error('删除模板文件失败:', fsError);
             // 即使文件删除失败，也继续删除数据库记录
@@ -269,7 +506,7 @@ app.post('/api/admin/templates/import-html', async (req, res) => {
         }
         
         // 使用htmlExtractor提取数据
-        const { extractFromHTML } = await import('../src/lib/htmlExtractor.js');
+        const { extractFromHTML } = await import('../lib/htmlExtractor.js');
         const extracted = extractFromHTML(html);
         
         if (!extracted.Q || extracted.Q.length === 0) {
@@ -285,6 +522,7 @@ app.post('/api/admin/templates/import-html', async (req, res) => {
             id: templateId,
             name: templateName,
             typeId: typeId,
+            countQ: extracted.Q.length,
             createdAt: new Date().toISOString()
         };
         
@@ -301,12 +539,15 @@ app.post('/api/admin/templates/import-html', async (req, res) => {
         await writeJSON(`templates/${templateId}/WT.json`, extracted.WT || {});
         await writeJSON(`templates/${templateId}/UI.json`, extracted.UI || {});
         await writeJSON(`templates/${templateId}/meta.json`, extracted.meta || {});
+        await writeJSON(`templates/${templateId}/rules.json`, extracted.rules || {});
+        await writeJSON(`templates/${templateId}/products.json`, extracted.products || []);
         
         res.json({
             success: true,
-            templateId,
+            template_id: templateId,
             templateName,
-            questionCount: extracted.Q.length
+            counts: { Q: extracted.Q.length },
+            typeId: typeId
         });
         
     } catch (error) {
@@ -318,7 +559,7 @@ app.post('/api/admin/templates/import-html', async (req, res) => {
 // 问卷导出
 app.post('/api/admin/export/survey', async (req, res) => {
     try {
-        const { typeId, count } = req.body;
+        const { typeId, count, shopQR } = req.body;
         
         if (!typeId || !count) {
             return res.status(400).json({ error: '缺少必要参数' });
@@ -360,13 +601,21 @@ app.post('/api/admin/export/survey', async (req, res) => {
         }
         
         // 获取类型名称
-        const types = await readJSON('types.json', []);
+        const typesData = await readJSON('types.json', []);
+        const types = Array.isArray(typesData) ? typesData : (typesData.items || []);
         const type = types.find(t => t.id === typeId);
         const typeName = type ? type.name : typeId;
         
+        // 从第一个模板读取样式、规则和产品信息
+        const firstTemplate = typeTemplates[0];
+        const UI = await readJSON(`templates/${firstTemplate.id}/UI.json`, {});
+        const WT = await readJSON(`templates/${firstTemplate.id}/WT.json`, {});
+        const rules = await readJSON(`templates/${firstTemplate.id}/rules.json`, {});
+        const products = await readJSON(`templates/${firstTemplate.id}/products.json`, []);
+        
         // 生成H5问卷
-        const { generateSurveyHTML } = await import('../lib/surveyGenerator.js');
-        const html = generateSurveyHTML(selectedQuestions, typeName, count);
+        const { generateSurveyHTML } = await import('./lib/surveyGenerator.js');
+        const html = generateSurveyHTML(selectedQuestions, typeName, count, UI, WT, rules, products, shopQR);
         
         // 保存文件
         const timestamp = Date.now();
@@ -428,6 +677,7 @@ app.use('/builder', (req, res, next) => {
 });
 
 // 启动服务器
-app.listen(3000, () => {
+app.listen(3000, async () => {
   console.log('Server is running on port 3000');
+  await loadTypes(); // 启动时加载类型数据
 });

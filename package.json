@@ -11,6 +11,7 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "jsdom": "^24.0.0",
+    "multer": "^2.0.2",
     "nanoid": "^5.0.7",
     "node-html-parser": "^7.0.1"
   }

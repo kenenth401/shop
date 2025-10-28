@@ -2,7 +2,7 @@
 import { Router } from 'express';
 import path from 'node:path';
 import { mkdir, writeFile, readFile } from 'node:fs/promises';
-import { extractFromHTML } from '../src/lib/htmlExtractor.js';
+import { extractFromHTML } from '../lib/htmlExtractor.js';
 
 const router = Router()
 const TPL_DIR = path.join(process.cwd(), 'templates');

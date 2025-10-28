@@ -1,5 +1,5 @@
 import { writeFile, mkdir } from 'node:fs/promises';
-import { buildHTML } from '../src/lib/builder.js';
+import { buildHTML } from '../lib/builder.js';
 
 const args = Object.fromEntries(process.argv.slice(2).map((s,i,arr)=>{
   if (s.startsWith('--')) {

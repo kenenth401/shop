@@ -15,6 +15,7 @@
       <button class="nav-item" data-view="types">查看类型</button>
       <button class="nav-item" data-view="questions">查看题目</button>
       <button class="nav-item" data-view="typeEdit">问卷类型编辑</button>
+      <button class="nav-item" data-view="shops">店铺管理</button>
       <button class="nav-item" data-view="export">问卷导出</button>
     </nav>
     <div class="foot">
@@ -74,6 +75,12 @@
         <select id="selExportType"></select>
         <label>题目数量：</label>
         <input id="exportCount" type="number" placeholder="题目数量" min="1" max="50" value="10">
+      </div>
+      <div class="row">
+        <label>选择店铺：</label>
+        <select id="selExportShop">
+          <option value="">请选择店铺</option>
+        </select>
         <button class="btn" id="exportBtn">导出问卷</button>
       </div>
       <div id="exportResult" class="msg" style="display:none;">
@@ -94,6 +101,33 @@
         <thead><tr><th>中文名</th><th>类型ID</th><th>操作</th></tr></thead>
         <tbody id="typeEditBody"></tbody>
       </table>
+    </section>
+
+    <section id="view-shops" class="view">
+      <h1>店铺管理</h1>
+      <div class="row">
+        <input id="newShopName" type="text" placeholder="店铺名称">
+        <input id="newShopManager" type="text" placeholder="负责人">
+        <button class="btn" id="addShop">新增店铺</button>
+      </div>
+      <div class="row">
+        <input id="newShopDescription" type="text" placeholder="店铺描述" class="grow">
+        <input id="newShopQrFile" type="file" accept="image/*" style="display:none">
+        <button type="button" id="uploadQrBtn" class="btn ghost">选择二维码图片</button>
+        <span id="qrFileName" class="muted"></span>
+      </div>
+      <table class="table">
+        <thead><tr><th>店铺名称</th><th>负责人</th><th>描述</th><th>二维码</th><th>操作</th></tr></thead>
+        <tbody id="shopsBody"></tbody>
+      </table>
+      
+      <!-- 图片预览模态框 -->
+      <div id="imageModal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <img id="modalImage" src="" alt="图片预览" style="max-width:100%; max-height:80vh;">
+        </div>
+      </div>
     </section>
   </main>
 </div>

@@ -51,7 +51,16 @@ function fromScriptTemplate(root){
   const node = root.querySelector('script#TEMPLATE');
   if(!node) return null;
   const json = tryJSON(node.text);
-  if (json && Array.isArray(json.Q)) return { Q: json.Q, WT: json.WT||{}, UI: json.UI||{}, meta: json.meta||{} };
+  if (json && Array.isArray(json.Q)) {
+    return { 
+      Q: json.Q, 
+      WT: json.WT||{}, 
+      UI: json.UI||{}, 
+      meta: json.meta||{},
+      rules: json.rules||{},
+      products: json.products||[]
+    };
+  }
   return null;
 }
 function fromAnyScriptJSON(root){
@@ -60,7 +69,16 @@ function fromAnyScriptJSON(root){
     if (!/\"Q\"\s*:\s*\[/.test(txt)) continue;
     const m = txt.match(/\{[\s\S]*\}/);
     const obj = m && tryJSON(m[0]);
-    if (obj && Array.isArray(obj.Q)) return { Q: obj.Q, WT: obj.WT||{}, UI: obj.UI||{}, meta: obj.meta||{} };
+    if (obj && Array.isArray(obj.Q)) {
+      return { 
+        Q: obj.Q, 
+        WT: obj.WT||{}, 
+        UI: obj.UI||{}, 
+        meta: obj.meta||{},
+        rules: obj.rules||{},
+        products: obj.products||[]
+      };
+    }
   }
   return null;
 }
@@ -71,11 +89,15 @@ function fromVarAssignments(root){
     const qLit = extractVarLiteral(src, 'Q');
     const wtLit = extractVarLiteral(src, 'WT');
     const uiLit = extractVarLiteral(src, 'UI');
-    let Q, WT, UI;
+    const rulesLit = extractVarLiteral(src, 'rules');
+    const productsLit = extractVarLiteral(src, 'products');
+    let Q, WT, UI, rules, products;
     try { Q = evalLiteral(qLit, 'Q'); } catch {}
     try { WT = evalLiteral(wtLit, 'WT'); } catch {}
     try { UI = evalLiteral(uiLit, 'UI'); } catch {}
-    if (Array.isArray(Q)) return { Q, WT: WT||{}, UI: UI||{}, meta: {} };
+    try { rules = evalLiteral(rulesLit, 'rules'); } catch {}
+    try { products = evalLiteral(productsLit, 'products'); } catch {}
+    if (Array.isArray(Q)) return { Q, WT: WT||{}, UI: UI||{}, meta: {}, rules: rules||{}, products: products||[] };
   }
   return null;
 }
@@ -107,7 +129,7 @@ function fromConstQUESTIONS(root){
       });
       Q.push({ key, type, title: { zh: title }, opts });
     });
-    if (Q.length) return { Q, WT, UI:{}, meta:{} };
+    if (Q.length) return { Q, WT, UI:{}, meta:{}, rules:{}, products:[] };
   }
   return null;
 }
@@ -150,7 +172,7 @@ function fromConstQT_SC(root){
       });
     }
 
-    if (Q.length) return { Q, WT, UI:{}, meta:{} };
+    if (Q.length) return { Q, WT, UI:{}, meta:{}, rules:{}, products:[] };
   }
   return null;
 }
@@ -172,7 +194,7 @@ function fromQuestionBlocks(root){
       Q.push({ key: key || `q_${Q.length+1}`, type:'single', title:{ zh: title || key }, opts });
     }
   }
-  return Q.length ? { Q, WT:{}, UI:{}, meta:{} } : null;
+  return Q.length ? { Q, WT:{}, UI:{}, meta:{}, rules:{}, products:[] } : null;
 }
 function fromRadioGroups(root){
   const inputs = root.querySelectorAll('input[type=radio],input[type=checkbox]');
@@ -218,9 +240,9 @@ function fromRadioGroups(root){
       txt = txt.replace(/^[A-Da-d]\s*[、.．．]\s*/, '').trim() || value;
       opts.push([value, txt]);
     }
-    Q.push({ key:name, type: isMulti ? 'multi' : 'single', title:{ zh:title }, opts });
-  }
-  return Q.length ? { Q, WT:{}, UI:{}, meta:{} } : null;
+      Q.push({ key:name, type: isMulti ? 'multi' : 'single', title:{ zh:title }, opts });
+    }
+    return Q.length ? { Q, WT:{}, UI:{}, meta:{}, rules:{}, products:[] } : null;
 }
 function metaFromDOM(root){
   const title = norm(root.querySelector('title')?.textContent || '');
@@ -240,7 +262,7 @@ export function extractFromHTML(html){
     fromConstQT_SC(root) ||
     fromQuestionBlocks(root) ||
     fromRadioGroups(root) ||
-    { Q:[], WT:{}, UI:{}, meta:{} }
+    { Q:[], WT:{}, UI:{}, meta:{}, rules:{}, products:[] }
   );
   r.meta = Object.assign({}, r.meta||{}, meta);
   return r;

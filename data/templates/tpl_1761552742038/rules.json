@@ -1,0 +1,62 @@
+{
+  "conclusions": [
+    {
+      "if": {
+        "any": [
+          {
+            "dim": {
+              "REC": ">= 3"
+            }
+          },
+          {
+            "dim": {
+              "MOOD": ">= 2"
+            }
+          },
+          {
+            "dim": {
+              "GUT": ">= 2"
+            }
+          }
+        ]
+      },
+      "text": {
+        "zh": "根据您的问卷结果，建议关注产后恢复情况，必要时咨询专业医生。",
+        "en": "Based on your survey results, we recommend paying attention to your postpartum recovery and consulting a professional if needed.",
+        "ja": "質問票の結果に基づき、産後リカバリー状況に注意を払い、必要に応じて専門医に相談することをお勧めします。"
+      }
+    }
+  ],
+  "recommendations": [
+    {
+      "if": {
+        "dim": {
+          "REC": ">= 2"
+        }
+      },
+      "product": {
+        "code": "rec_001",
+        "title": {
+          "zh": "产后康复指导",
+          "en": "Postpartum Recovery Guidance",
+          "ja": "産後リカバリーガイダンス"
+        }
+      }
+    },
+    {
+      "if": {
+        "dim": {
+          "GUT": ">= 1"
+        }
+      },
+      "product": {
+        "code": "gut_001",
+        "title": {
+          "zh": "肠道健康调理套餐",
+          "en": "Gut Health Package",
+          "ja": "腸内健康パッケージ"
+        }
+      }
+    }
+  ]
+}
