@@ -1,68 +1,9 @@
-// H5问卷生成器 - 使用现有的shell.html模板
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-export function generateSurveyHTML(questions, typeName, count, UI = {}, WT = {}, rules = {}, products = [], shopQR = '') {
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const surveyId = `survey_${timestamp}`;
-  
-  // 清理题目中的序号信息，重新从1开始编号
-  const cleanQuestions = questions.map((q, index) => {
-    const title = q.title || {};
-    // 如果 title 是对象，清理所有语言版本
-    if (typeof title === 'object') {
-      const cleanedTitle = {};
-      Object.keys(title).forEach(lang => {
-        let text = title[lang];
-        // 移除开头类似 "1. ", "2. ", "3. " 等序号
-        if (typeof text === 'string') {
-          text = text.replace(/^\d+\.\s*/, '');
-          text = text.replace(/^第\s*\d+\s*题[：:]\s*/, '');
-          text = text.replace(/^\(\d+\)\s*/, '');
-        }
-        cleanedTitle[lang] = text;
-      });
-      return { ...q, title: cleanedTitle };
-    }
-    // 如果 title 是字符串，也清理
-    if (typeof title === 'string') {
-      const text = title.replace(/^\d+\.\s*/, '').replace(/^第\s*\d+\s*题[：:]\s*/, '').replace(/^\(\d+\)\s*/, '');
-      return { ...q, title: text };
-    }
-    return q;
-  });
-  
-  // 构建完整的模板数据
-  const templateData = {
-    Q: cleanQuestions,
-    WT: WT || {}, // 使用传入的权重表
-    UI: UI || {
-      zh: {
-        prev: "上一步",
-        next: "下一步", 
-        submit: "提交问卷",
-        needQ: "请先选择本题答案"
-      }
-    },
-    meta: {
-      title: typeName, // 使用类型名称作为标题
-      name: typeName,
-      lang_default: 'zh'
-    },
-    rules: rules || {}, // 使用传入的结论和推荐规则
-    products: products || [], // 使用传入的店铺或产品信息
-    shop: { qr: shopQR || '' } // 使用传入的店铺二维码
-  };
-  
-  // 使用与导入模板相同的完整结构
-  const html = `<!doctype html>
+<!doctype html>
 <html lang="zh">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>${typeName}</title>
+  <title>产后恢复</title>
   <style>
     :root{--brand:#2B77F2;--bg:#f7f8fa;--text:#1a1a1a;--muted:#667085;--card:#fff}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--text)}
@@ -105,7 +46,7 @@ export function generateSurveyHTML(questions, typeName, count, UI = {}, WT = {},
       <div class="logo">健</div>
       <div class="header-titles">
         <div class="header-title">小林健康研究所</div>
-        <div class="header-subtitle">` + (UI.zh?.subA || typeName + ' 专业评估') + `</div>
+        <div class="header-subtitle">产后恢复专业评估（Pro）</div>
       </div>
     </div>
     <div class="header-lang">
@@ -119,7 +60,7 @@ export function generateSurveyHTML(questions, typeName, count, UI = {}, WT = {},
 
   <div class="wrap">
     <div class="card">
-      <div class="title"><h1 id="surveyTitle">` + typeName + `</h1></div>
+      <div class="title"><h1 id="surveyTitle">产后恢复</h1></div>
       <div class="progress"><div id="bar"></div></div>
       <div id="step"></div>
       <div class="actions">
@@ -150,7 +91,7 @@ export function generateSurveyHTML(questions, typeName, count, UI = {}, WT = {},
   <button class="print" onclick="window.print()">打印/保存PDF</button>
 
   <!-- 模板数据 -->
-  <script type="application/json" id="TEMPLATE">${JSON.stringify(templateData)}</script>
+  <script type="application/json" id="TEMPLATE">{"Q":[{"key":"energy","title":{"zh":"白天体力（EN）","en":"Daytime energy (EN)","ja":"体力（EN）"},"type":"single","opts":[["bad","很差"],["low","偏低"],["good","良好"]],"templateId":"tpl_1761544843302","templateName":"模板_tpl_1761544843302"},{"key":"mood","title":{"zh":"情绪筛查·近两周（MOOD）","en":"Mood in last 2 weeks (MOOD)","ja":"気分（直近2週・MOOD）"},"type":"single","opts":[["sev","明显低落/焦虑/兴趣下降"],["mild","偶有低落/易怒"],["ok","心情稳定"]],"templateId":"tpl_1761544843302","templateName":"模板_tpl_1761544843302"},{"key":"bowel","title":{"zh":"排便/痔疮（可多选，GUT）","en":"Bowel/hemorrhoid (multi, GUT)","ja":"排便/痔（複数・GUT）"},"type":"multi","opts":[["const","便秘"],["hemo","痔疮不适"],["none","均无"]],"templateId":"tpl_1761544843302","templateName":"模板_tpl_1761544843302"},{"key":"sleep","title":{"zh":"睡眠质量（EN）","en":"Sleep quality (EN)","ja":"睡眠（EN）"},"type":"single","opts":[["poor","差/易醒"],["mid","一般"],["good","良好"]],"templateId":"tpl_1761544843302","templateName":"模板_tpl_1761544843302"},{"key":"pf","title":{"zh":"盆底症状（可多选，PF）","en":"Pelvic floor (multi, PF)","ja":"骨盤底（複数・PF）"},"type":"multi","opts":[["ui","咳嗽/运动漏尿"],["pro","阴道或下坠感"],["none","均无"]],"templateId":"tpl_1761544843302","templateName":"模板_tpl_1761544843302"},{"key":"time","title":{"zh":"产后时间（REC）","en":"Postpartum time (REC)","ja":"産後期間（REC）"},"type":"single","opts":[["lt2","<2 周"],["w2_6","2–6 周"],["gt6","> 6 周"]],"templateId":"tpl_1761544843302","templateName":"模板_tpl_1761544843302"},{"key":"incision","title":{"zh":"切口/会阴情况（可多选，REC）","en":"Incision/perineum (multi, REC)","ja":"切開/会陰（複数・REC）"},"type":"multi","opts":[["red","红肿/硬结"],["exu","渗液/裂开"],["ok","外观良好（都无）"]],"templateId":"tpl_1761544843302","templateName":"模板_tpl_1761544843302"},{"key":"bleed","title":{"zh":"阴道出血情况（REC）","en":"Vaginal bleeding (REC)","ja":"出血（REC）"},"type":"single","opts":[["heavy","大量出血（短时间浸透1片）"],["decr","规律减少"],["stop","点滴/已停止"]],"templateId":"tpl_1761544843302","templateName":"模板_tpl_1761544843302"},{"key":"temp","title":{"zh":"体温（REC）","en":"Temperature (REC)","ja":"体温（REC）"},"type":"single","opts":[["fev38","≥38℃"],["lowfev","37.3–37.9℃"],["nofev","无发热"]],"templateId":"tpl_1761544843302","templateName":"模板_tpl_1761544843302"},{"key":"act","title":{"zh":"活动/锻炼（EN）","en":"Activity/exercise (EN)","ja":"活動/運動（EN）"},"type":"single","opts":[["sed","缺乏运动/久坐"],["light","轻度活动（散步/伸展）"],["mod","规律中等强度"]],"templateId":"tpl_1761544843302","templateName":"模板_tpl_1761544843302"}],"WT":{"REC":{"bleed":{"heavy":4,"decr":1,"stop":0},"lochia":{"abn":3,"gt6w":3,"ok":0},"temp":{"fev38":4,"lowfev":2,"nofev":0},"incision":{"red":3,"exu":4,"ok":0}},"PF":{"pf":{"ui":3,"pro":3,"none":0}},"LAC":{"lacto":{"eng":2,"mast":4,"none":0}},"MOOD":{"mood":{"sev":4,"mild":2,"ok":0}},"EN":{"sleep":{"poor":2,"mid":1,"good":0},"energy":{"bad":2,"low":1,"good":0},"act":{"sed":1,"light":0.5,"mod":0},"diet":{"protlow":1,"irreg":0,"bal":0}},"GUT":{"bowel":{"const":2,"hemo":1,"none":0},"diet":{"protlow":1,"irreg":1,"bal":0}},"PAIN":{"pain":{"sev":3,"mid":2,"mild":0}}},"UI":{"zh":{"subA":"产后恢复专业评估（Pro）","prev":"上一步","next":"下一步","submit":"提交","lead":"留下联系方式以生成个性化产后评估","yourPlan":"产后恢复评估报告","overview":"总体概述","dims":"分维度分析","actions":"重点干预清单","follow":"复诊/随访时间窗","buy":"立即购买","copy":"复制推荐文案","ok":"已复制","fail":"复制失败","needQ":"请先选择本题答案","needLead":"请填写姓名与联系方式","sev":{"a":"Ⅰ 良好","b":"Ⅱ 需关注","c":"Ⅲ 需干预","d":"Ⅳ 高风险"},"dim":{"REC":"恢复","PF":"盆底","LAC":"泌乳","MOOD":"情绪","EN":"体力/睡眠","GUT":"排便/营养","PAIN":"疼痛"},"med":"当前存在就医红旗，建议尽快前往产科/乳腺/外科等门诊评估。（本自测不替代医疗服务）","rec":"优先处理主导问题，再进入巩固/维持期"},"en":{"subA":"Postpartum Recovery Assessment (Pro)","prev":"Back","next":"Next","submit":"Submit","lead":"Leave your contact to generate your report","yourPlan":"Postpartum Recovery Report","overview":"Overview","dims":"Dimension Analysis","actions":"Priority Interventions","follow":"Follow-up Window","buy":"Buy Now","copy":"Copy Summary","ok":"Copied","fail":"Copy failed","needQ":"Please answer this question first","needLead":"Please fill your name & contact","sev":{"a":"I Good","b":"II Watch","c":"III Intervene","d":"IV High-risk"},"dim":{"REC":"Recovery","PF":"Pelvic floor","LAC":"Lactation","MOOD":"Mood","EN":"Energy/Sleep","GUT":"Bowel/Nutrition","PAIN":"Pain"},"med":"Red flags present. Please seek in-person care. This tool does not replace medical services.","rec":"Prioritize leading problems, then enter consolidation/maintenance."},"ja":{"subA":"産後リカバリー評価（Pro）","prev":"戻る","next":"次へ","submit":"送信","lead":"連絡先を入力してレポートを生成","yourPlan":"産後リカバリーレポート","overview":"総合概要","dims":"領域分析","actions":"重点介入","follow":"再診/フォロー時期","buy":"今すぐ購入","copy":"推奨文をコピー","ok":"コピー済み","fail":"コピー失敗","needQ":"この設問に回答してください","needLead":"氏名と連絡先を入力してください","sev":{"a":"Ⅰ 良好","b":"Ⅱ 注視","c":"Ⅲ 介入要","d":"Ⅳ ハイリスク"},"dim":{"REC":"回復","PF":"骨盤底","LAC":"授乳","MOOD":"気分","EN":"体力/睡眠","GUT":"排便/栄養","PAIN":"疼痛"},"med":"レッドフラッグあり。速やかに受診してください。本ツールは医療行為を代替しません。","rec":"主導課題を優先し、その後維持期へ。"}},"meta":{"title":"产后恢复","name":"产后恢复","lang_default":"zh"},"rules":{"conclusions":[{"if":{"any":[{"dim":{"REC":">= 0"}},{"dim":{"MOOD":">= 0"}},{"dim":{"GUT":">= 0"}}]},"text":{"zh":"根据您的问卷结果，建议关注产后恢复情况，必要时咨询专业医生。","en":"Based on your survey results, we recommend paying attention to your postpartum recovery and consulting a professional if needed.","ja":"質問票の結果に基づき、産後リカバリー状況に注意を払い、必要に応じて専門医に相談することをお勧めします。"}}],"recommendations":[{"if":{"dim":{"REC":">= 0"}},"product":{"code":"rec_001","title":{"zh":"产后康复指导","en":"Postpartum Recovery Guidance","ja":"産後リカバリーガイダンス"}}},{"if":{"dim":{"GUT":">= 0"}},"product":{"code":"gut_001","title":{"zh":"肠道健康调理套餐","en":"Gut Health Package","ja":"腸内健康パッケージ"}}}]},"products":[{"id":"rec_001","name":"产后修复套 (LUMI-ACTIV + GUT-VIVE)","desc":"专业产后恢复指导服务，包括饮食、运动、康复训练等全方位建议。结合营养调理和康复训练，全面改善产后恢复状况。","images":[],"price":0,"category":"产后康复","course":"8-12周 (可按需延长)","url":"#"},{"id":"gut_001","name":"肠道健康调理套餐 (GUT-VIVE)","desc":"针对产后便秘、肠道不适的专业调理方案，包括膳食建议和营养补充。有助于改善肠道功能，促进整体健康恢复。","images":[],"price":0,"category":"肠道健康","course":"6-8周 (可按需延长)","url":"#"}],"shop":{"qr":"/uploads/1761293038062_æªå±2025-09-16 13.37.48.png"}}</script>
 
   <!-- 超轻量 qrcode.js -->
   <script>
@@ -232,7 +173,7 @@ export function generateSurveyHTML(questions, typeName, count, UI = {}, WT = {},
     if (c.dim){
       for (const k in c.dim){
         const val = Number(scores[k]||0);
-        const m = String(c.dim[k]).match(/^([<>]=?|==)\s*(-?\d+(?:\.\d+)?)$/);
+        const m = String(c.dim[k]).match(/^([<>]=?|==)s*(-?d+(?:.d+)?)$/);
         if (!m) return false;
         const op = m[1], rhs = Number(m[2]);
         if (op==='>=' && !(val>=rhs)) return false;
@@ -325,42 +266,34 @@ export function generateSurveyHTML(questions, typeName, count, UI = {}, WT = {},
 
     // 5. 产品推荐
     const productMap = Object.fromEntries((state.products||[]).map(p=>[p.id,p]));
-    console.log('产品推荐检查:', {
-      recoLength: ev.reco.length,
-      productsCount: state.products?.length,
-      productMapSize: Object.keys(productMap).length,
-      scores: scores,
-      rules: state.rules
-    });
-    
-    // 强制显示产品推荐用于测试
-    const recoToShow = ev.reco.length > 0 ? ev.reco : (state.products || []).map(p => ({ code: p.id, title: { zh: p.name } }));
-    
-    if (recoToShow.length > 0) {
+    if (ev.reco.length > 0) {
       // 生成分数摘要
       const scoreSummary = Object.entries(scores).map(([dim,score])=>
         dimNames[dim] + ': ' + score.toFixed(1)
       ).join(' | ');
       
-      const recoHTML = recoToShow.map(r=>{
+      const recoHTML = ev.reco.map(r=>{
         const p = productMap[r.code]||{};
-        // 处理title可能是对象的情况
-        let name = '';
-        if (typeof r.title === 'string') {
-          name = r.title;
-        } else if (r.title && typeof r.title === 'object') {
-          name = r.title[state.lang] || r.title.zh || r.title.en || '';
-        }
-        if (!name) {
-          name = p.name || r.code;
-        }
+        const name = r.title || p.name || r.code;
         const desc = p.desc || '专业指导服务，为您提供专业的产后恢复指导。';
         const course = p.course || '8-12 周 (可按需延长)';
         const img = (p.images&&p.images[0]) ? '<img src="'+p.images[0]+'" alt="'+name+'" style="width:100px;height:100px;object-fit:cover;border-radius:12px;margin-right:16px" />' : '';
-        return '<div style="padding:20px;background:#fff;border-radius:12px;margin-bottom:16px;border:1px solid #e5e7eb"><div style="font-size:12px;color:#667085;margin-bottom:12px">'+scoreSummary+'</div><div style="display:flex;align-items:flex-start;margin-bottom:16px">'+img+'<div style="flex:1"><h3 style="margin:0 0 8px;font-size:20px;color:#1a1a1a">'+name+'</h3><div style="font-size:13px;color:#667085;margin-bottom:12px">'+desc+'</div><div style="font-size:13px;color:#667085">建议疗程 '+course+'</div></div></div></div>';
+        const url = p.url || '#';
+        const buyBtn = '<button data-url="'+JSON.stringify(url)+'" style="flex:1;padding:12px 24px;background:#10b981;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer">立即购买</button>';
+        const copyBtn = '<button data-name="'+JSON.stringify(name)+'" style="flex:1;padding:12px 24px;background:#fff;color:#1a1a1a;border:1px solid #e5e7eb;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer">复制推荐文案</button>';
+        return '<div style="padding:20px;background:#fff;border-radius:12px;margin-bottom:16px;border:1px solid #e5e7eb"><div style="font-size:12px;color:#667085;margin-bottom:12px">'+scoreSummary+'</div><div style="display:flex;align-items:flex-start;margin-bottom:16px">'+img+'<div style="flex:1"><h3 style="margin:0 0 8px;font-size:20px;color:#1a1a1a">'+name+'</h3><div style="font-size:13px;color:#667085;margin-bottom:12px">'+desc+'</div><div style="font-size:13px;color:#667085">建议疗程 '+course+'</div></div></div><div style="display:flex;gap:12px">'+buyBtn+copyBtn+'</div></div>';
       }).join('');
       
       recoEl.innerHTML = '<h3 style="margin:20px 0 12px;font-size:18px;color:#1a1a1a">产品推荐</h3>' + recoHTML;
+      // 添加事件监听器
+      setTimeout(() => {
+        recoEl.querySelectorAll('button[data-url]').forEach(btn => {
+          btn.addEventListener('click', () => window.open(JSON.parse(btn.getAttribute('data-url')), '_blank'));
+        });
+        recoEl.querySelectorAll('button[data-name]').forEach(btn => {
+          btn.addEventListener('click', () => copyRecText(JSON.parse(btn.getAttribute('data-name'))));
+        });
+      }, 0);
     } else {
       recoEl.innerHTML = '';
     }
@@ -375,6 +308,15 @@ export function generateSurveyHTML(questions, typeName, count, UI = {}, WT = {},
     resultCard.classList.remove('hidden');
   }
   
+  // 复制推荐文案函数
+  function copyRecText(productName){
+    const textToCopy = '根据产后恢复评估，推荐使用 '+productName+'。';
+    navigator.clipboard.writeText(textToCopy).then(()=>{
+      alert('推荐文案已复制');
+    }).catch(()=>{
+      alert('复制失败');
+    });
+  }
 
   // 确保DOM加载完成后再渲染
   window.addEventListener('DOMContentLoaded', function() {
@@ -391,11 +333,7 @@ export function generateSurveyHTML(questions, typeName, count, UI = {}, WT = {},
 
   <!-- 页脚 -->
   <div class="footer">
-    小林健康研究所・` + (UI.zh?.subA || typeName) + `
+    小林健康研究所・产后恢复专业评估（Pro）
   </div>
 </body>
-</html>`;
-  
-  return html;
-}
-
+</html>
